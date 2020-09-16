@@ -1,0 +1,34 @@
+<!-- chat/templates/chat/index.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Chat Rooms</title>
+</head>
+<body>
+
+
+    <input id="room-name-submit" type="button" value="Go to lobby">
+
+    <script>
+    /*
+        document.querySelector('#room-name-input').focus();
+        document.querySelector('#room-name-input').onkeyup = function(e) {
+            if (e.keyCode === 13) {  // enter, return
+                document.querySelector('#room-name-submit').click();
+            }
+        };
+        */
+
+        document.querySelector('#room-name-submit').onclick = function(e) {
+            //var roomName = document.querySelector('#room-name-input').value;
+            var roomName = 'lobby'
+            if(roomName === '')
+              alert("please enter a room name");
+
+            else
+            window.location.pathname = '/chat/' + roomName + '/';
+        };
+    </script>
+</body>
+</html>

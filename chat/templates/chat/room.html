@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8"/>
+    <title>Chat Room</title>
+
+    <style>
+
+    #chat{
+      border: 1px solid black;
+      border-radius: 10px;
+      width: 250px;
+
+
+
+    }
+
+    </style>
+</head>
+<body>
+  <center style = 'overflow:scroll; height: 600px;' id = "chat-log"></center><hr>
+<form id = "contactForm">
+  <center><b>Name:</b>  <input id="chat-message-input1" type="text" size="20">
+    <b>Email:</b><input id="chat-message-input2" type="email" size="20">
+    <b>Contact:</b><input id="chat-message-input3" type="text" size="20"><br><br>
+    <b>Message:</b><textarea id="chat-message-input4" cols="40" rows="5"></textarea><br><br>
+    <input id="chat-message-submit" type="button" value="Send"></center><br></br>
+</form>
+
+
+
+    {{ room_name|json_script:"room-name" }}
+    <script>
+        const roomName = JSON.parse(document.getElementById('room-name').textContent);
+
+        const chatSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/chat/'
+            + roomName
+            + '/'
+        );
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            document.querySelector('#chat-log').innerHTML += "<p id = 'chat'><b style = 'color:blue'>" + data.message1 + "</b>" + "<br />" + data.message4 + "<br /><br /> <b>Status: </b><small style = 'color:red;'>Not seen</small></p><br /> <br />";
+//            document.querySelector('#msg').innerHTML += data.message4 + "<br />";
+
+        };
+/*
+        chatSocket.onclose = function(e) {
+          if(e.wasClean)
+            console.error('Chat socket closed unexpectedly');
+          else {
+            console.error('Connection died');
+          }
+        };*/
+
+        document.querySelector('#chat-message-input1').focus();
+        document.querySelector('#chat-message-input1').onkeyup = function(e) {
+            if (e.keyCode === 13) {  // enter, return
+                document.querySelector('#chat-message-submit').click();
+            }
+        };
+
+        document.querySelector('#chat-message-submit').onclick = function(e) {
+            const messageInputDom1 = document.querySelector('#chat-message-input1');
+            const message1 = messageInputDom1.value;
+
+
+            const messageInputDom2 = document.querySelector('#chat-message-input2');
+            const message2 = messageInputDom2.value;
+
+
+
+            const messageInputDom3 = document.querySelector('#chat-message-input3');
+            const message3 = messageInputDom3.value;
+
+
+
+            const messageInputDom4 = document.querySelector('#chat-message-input4');
+            const message4 = messageInputDom4.value;
+
+            chatSocket.send(JSON.stringify({
+                'message1': message1,
+                'message2' : message2,
+                'message3' : message3,
+                'message4' : message4
+
+
+
+
+  }));
+
+      document.querySelector('#contactForm').reset();
+
+            messageInputDom1.value1 = '';
+            messageInputDom1.value2 = '';
+            messageInputDom1.value3 = '';
+            messageInputDom1.value4 = '';
+        };
+    </script>
+</body>
+</html>
